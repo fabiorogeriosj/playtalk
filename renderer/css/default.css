@@ -1,0 +1,100 @@
+* {
+  box-sizing: border-box;
+  outline: none;
+}
+body, html {
+  font-family: 'Raleway', sans-serif;
+  background-color: #fff;
+  margin:0;
+  padding:0;
+  border:0;
+}
+#menu {
+  width: 200px;
+  height: 100%;
+  background-color: #11171c;
+  position: fixed;
+  top: 0;
+  color: #fff;
+  z-index: 100;
+}
+#menu input {
+  background-color: #cc4d4d;
+  padding: 20px;
+  width: 100%;
+  border: none;
+  color: #fff;
+}
+#menu input::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.5);;
+}
+#menu h1 {
+  color: #38454d;
+  font-size: 14px;
+  padding-top: 20px;
+  padding-left: 20px;
+}
+#menu ul {
+  padding: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+#menu li {
+  list-style: none;
+  padding: 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+#menu li.selected {
+  background-color: #1c242b;
+}
+#categories {
+  overflow: auto;
+  height: 100%;
+  padding-bottom: 60px;
+}
+#menu ::-webkit-scrollbar {
+    width: 10px;
+}
+#content {
+  position: fixed;
+  top: 0;
+  padding-left: 220px;
+  z-index: 50;
+}
+#content h1 {
+  font-weight: 400;
+}
+#content .top {
+  background-color: #fff;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  padding-left: 240px;
+  z-index: 200;
+  padding-bottom: 10px;
+  margin-left: -20px;
+}
+#actions {
+  float: right;
+  margin: 20px;
+}
+#actions input {
+  border-radius: 6px;
+  border:1px solid #ccc;
+  padding: 10px;
+  width: 250px;
+}
+#talks {
+  height: 100%;
+  overflow: auto;
+  position: fixed;
+  top: 0;
+  padding-top: 120px;
+}
+.talk {
+  float: left;
+}
+.talk p {
+  display: none;
+}

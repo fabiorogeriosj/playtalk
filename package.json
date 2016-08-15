@@ -1,0 +1,30 @@
+{
+  "name": "playtalk",
+  "version": "1.0.0",
+  "description": "Práticas com Electron",
+  "main": "main/app.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabiorogeriosj/playtalk.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fabiorogeriosj/playtalk/issues"
+  },
+  "homepage": "https://github.com/fabiorogeriosj/playtalk#readme",
+  "devDependencies": {
+    "devtron": "^1.3.0",
+    "electron-prebuilt": "^1.3.3"
+  },
+  "dependencies": {
+    "async": "^2.0.1",
+    "himalaya": "^0.2.0",
+    "html-to-json": "^0.6.0",
+    "request": "^2.74.0",
+    "xml2js": "^0.4.17"
+  }
+}

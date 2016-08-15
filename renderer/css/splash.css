@@ -1,0 +1,11 @@
+body {
+  text-align: center;
+  color: #fff;
+  font-family: 'Raleway', sans-serif;
+}
+#loading {
+  position: absolute;
+  left: 50%;
+  margin-left: -80px;
+  top: 54%;
+}
