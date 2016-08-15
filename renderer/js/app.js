@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngSanitize']);
+var app = angular.module('app', []);
 var ipcRenderer = require('electron').ipcRenderer;
 
 app.controller('indexCtrl', function ($scope, $timeout){
@@ -15,9 +15,13 @@ app.controller('indexCtrl', function ($scope, $timeout){
 
     $scope.listTalks = function (category){
       $timeout(function(){
-          $scope.talks = ipcRenderer.sendSync('getTalks', category);
+          $scope.talks = ipcRenderer.sendSync('getTalks', category.id);
           console.log($scope.talks);
       })
+    }
+
+    $scope.play = function (talk){
+      ipcRenderer.send('playTalk', talk);
     }
 
 })

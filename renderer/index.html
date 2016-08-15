@@ -6,38 +6,45 @@
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/default.css">
     <script src="lib/angular.min.js"/></script>
-    <script src="lib/angular-sanitize.min.js"></script>
     <script src="js/app.js"></script>
   </head>
   <body ng-controller="indexCtrl">
     <section id="menu">
       <input type="serach"
-             placeholder="Procurar em categorias..."
-             ng-model="searchCategory">
+             placeholder="Procurar talk..."
+             ng-model="searchTalk">
       <div id="categories">
         <h1>Categorias</h1>
         <ul>
-          <li ng-repeat="item in categories | filter:searchCategory"
+          <li ng-repeat="item in categories"
               ng-class="{selected:item == category}"
               ng-click="listCategory(item)">
-            {{item == "" ? "Todas" : item}}
+            <img ng-src="img/{{item.icon}}" /> {{item.title}}
           </li>
         </ul>
       </div>
     </section>
     <section id="content">
       <div class="top">
-        <div id="actions">
-          <input type="search" placeholder="Procurar em {{category == '' ? 'Todas categorias' : category}}">
-        </div>
-        <h1>{{category == "" ? "Todas categorias" : category}}</h1>
+        <h1>
+          <img ng-src="img/{{category.icon}}" />
+          {{category.title}}
+        </h1>
       </div>
       <div id="talks">
-        <div class="talk" ng-repeat="item in talks" >
-          {{item.title[0]}}
-          <div ng-bind-html="item.description">
-
+        <div class="talk" ng-repeat="talk in talks">
+          <div class="image" style="background-image:url({{talk.image}})">
+            <span>{{talk.time}}</span>
+            <h2>{{talk.title}}</h2>
+            <div class="actions">
+              <button ng-click="play(talk)" type="button" name="button">Play</button>
+              <p>
+                {{talk.description}}
+              </p>
+            </div>
           </div>
+          <h3>{{talk.author}}</h3>
+          <h4>{{talk.date}}</h4>
         </div>
       </div>
     </section>

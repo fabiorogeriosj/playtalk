@@ -1,15 +1,31 @@
 var electron = require('electron');
 var request = require('request');
-var htmlToJson = require('html-to-json');
 
 var app = electron.app;
 var BrowserWindow = electron.BrowserWindow;
 var ipcMain = electron.ipcMain;
+var globalShortcut = electron.globalShortcut;
+var urlInfoQ = 'https://www.infoq.com';
 
 var splash = null;
 var win = null;
-var channels = [];
-var categories = [""];
+var winPlay = null;
+var talks = [];
+talks['all'] = [];
+talks['development'] = [];
+talks['architecture-design'] = [];
+talks['data-science'] = [];
+talks['culture-methods'] = [];
+talks['devops'] = [];
+
+var categories = [
+  { id: 'all', title:'Todas', icon: 'internet.png' },
+  { id: 'development', title: 'Desenvolvimento', icon: 'settings.png'},
+  { id: 'architecture-design', title: 'Arquitetura e Design', icon: 'share.png'},
+  { id: 'data-science', title: 'Data Science', icon: 'server.png'},
+  { id: 'culture-methods', title: 'Cultura e Métodos', icon: 'list.png'},
+  { id: 'devops', title: 'DevOps', icon: 'controls.png'}
+];
 
 app.on('ready', function (){
     splash = new BrowserWindow({
@@ -27,67 +43,75 @@ app.on('ready', function (){
     splash.once('ready-to-show', function (){
         splash.show();
     });
+
+    globalShortcut.register('CommandOrControl+Shift+Space', function() {
+      winPlay.webContents.send('pauseEvent');
+    })
 });
 
 var createWinIndex = function (){
   win = new BrowserWindow({
-    width:900,
-    height: 600,
+    width:1035,
+    height: 750,
     show: false,
-    autoHideMenuBar: true,
-    darkTheme :true
+    autoHideMenuBar: true
   })
   win.loadURL('file://'+__dirname+'/../renderer/index.html');
   win.webContents.openDevTools();
   win.once('ready-to-show', function (){
-      splash.close();
       win.show();
+      splash.close();
   });
 }
+
+var createWinPlayTalk = function (talk){
+   winPlay = new BrowserWindow({
+    width:650,
+    height: 400,
+    show: false,
+    title: talk.title + ' - ' + talk.author,
+    autoHideMenuBar: true,
+    backgroundColor:'#000'
+  })
+  winPlay.loadURL('file://'+__dirname+'/../renderer/play.html');
+  winPlay.webContents.openDevTools();
+  winPlay.once('ready-to-show', function (){
+      winPlay.show();
+      request(urlInfoQ + talk.link, function (error, res, body){
+        talk.src = body.split("P.s = '")[1].split("'")[0];
+        winPlay.webContents.send('playEvent', talk);
+      });
+  });
+}
+
 ipcMain.on('loadChannels', function (event, arg){
-
-  setTimeout(function (){
-    // request('https://www.infoq.com/br/presentations/', function (error, response, body){
-    //
-    //   var promise = htmlToJson.parse(body);
-    //
-    //   promise.done(function (result) {
-    //     event.sender.send('asynchronous-reply', result)
-    //   });
-    // });
-
-    var promise = htmlToJson.request('https://www.infoq.com/br/presentations', {
-      'news_type_video': function ($doc) {
-        return $doc.find('.news_type_video');
+  request(urlInfoQ + '/br/presentations', function (error, res, body){
+    var elements = body.split('class="news_type_video');
+    for(item of elements){
+      var talk = {}
+      if(item.split('class="videolength">').length > 1){
+        talk.link = item.split('href="')[1].split('"')[0];
+        talk.title = item.split('title="')[1].split('"')[0];
+        talk.image = item.split('<img src="')[1].split('"')[0];
+        talk.time = item.split('class="videolength">')[1].split('</')[0];
+        talk.author = item.split('class="author"')[1].split('title="')[1].split('"')[0];
+        talk.date = item.split('class="author"')[1].split('&nbsp;em&nbsp;')[1].split('</span>')[0].trim().split('<a')[0];
+        talk.description = item.split('<p>')[1].split('</p>')[0].trim();
+        talks['all'].push(talk)
       }
-    }, function (err, result) {
-      event.sender.send('asynchronous-reply', result)
-    });
-  }, 1000);
+    }
+
+    createWinIndex();
+  });
 
 });
 
 ipcMain.on('getCategories', function(event) {
     event.returnValue = categories;
 });
-
-ipcMain.on('getTalks', function (event, category){
-    var talks = [];
-    for (channel of channels) {
-      for(item of channel.item){
-        var existCategory = false;
-        for(category of item.category){
-          var exist = categories.filter(function(value){
-            return value == category;
-          });
-          existCategory = true;
-        }
-        if(existCategory){
-          if(exist.length){
-              talks.push(item);
-          }
-        }
-      }
-    }
-    event.returnValue = talks;
+ipcMain.on('getTalks', function(event, category) {
+    event.returnValue = talks[category];
+});
+ipcMain.on('playTalk', function (event, talk){
+    createWinPlayTalk(talk)
 });
