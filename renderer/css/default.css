@@ -9,6 +9,9 @@ body, html {
   padding:0;
   border:0;
 }
+.loading {
+  padding-top: 100px;
+}
 #menu {
   width: 200px;
   height: 100%;
@@ -19,7 +22,7 @@ body, html {
   z-index: 100;
 }
 #menu input {
-  background-color: #cc4d4d;
+  background-color: #0096e6;
   padding: 20px;
   width: 100%;
   border: none;
@@ -102,7 +105,6 @@ body, html {
   width: 180px;
   margin-right: 15px;
   margin-bottom: 20px;
-  cursor: pointer;
 }
 .talk .actions {
   position: absolute;
@@ -114,9 +116,33 @@ body, html {
   font-size: 12px;
   padding: 10px;
   display: none;
+  text-align: center;
 }
 .talk:hover .actions{
   display: block;;
+}
+.talk .actions p {
+  text-align: left;
+}
+.talk .actions button {
+  background-color: #0096e6;
+  text-align: center;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  padding: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin: auto;
+  cursor: pointer;
+  transition: background 1000ms ease;
+}
+.talk .actions button:hover {
+  background-color: #40bcff;
+}
+.talk .actions button img {
+  float: left;
+  margin-right: 10px;
 }
 .talk span {
   background-color: #000;
@@ -136,6 +162,7 @@ body, html {
   background-position: center;
   border-radius: 4px;
   position: relative;
+  background-color: #000;
 }
 .talk h2 {
   font-weight: 400;
@@ -153,6 +180,9 @@ body, html {
   font-size: 14px;
   margin: 0;
   margin-top: 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .talk h4 {
   font-size: 14px;

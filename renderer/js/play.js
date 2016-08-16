@@ -1,14 +1,15 @@
 var ipcRenderer = require('electron').ipcRenderer;
-
 ipcRenderer.on('playEvent', function (event, talk){
-
-  document.getElementById('loading').style.display='none';
-  document.getElementById('video').style.display='block';
-  document.getElementById('video').src = talk.src;
-  document.getElementById('video').play();
-
+  iframe.src = talk.urlTalk;
+  iframe.onload = function (){
+    iframe.contentDocument.getElementById('video').play();
+    iframe.contentDocument.getElementById('video').pause();
+    video.style.display='block';
+    video.src=talk.src;
+    video.play();
+    loading.style.display='none';
+  }
 });
-
 
 ipcRenderer.on('pauseEvent', function (event){
   if(document.getElementById('video').paused){

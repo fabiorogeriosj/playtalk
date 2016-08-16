@@ -27,17 +27,21 @@
     <section id="content">
       <div class="top">
         <h1>
-          <img ng-src="img/{{category.icon}}" />
           {{category.title}}
         </h1>
       </div>
-      <div id="talks">
-        <div class="talk" ng-repeat="talk in talks">
+      <div class="loading" ng-show="!loadComplete">
+          Carregando...
+      </div>
+      <div id="talks" ng-show="loadComplete">
+        <div class="talk" ng-repeat="talk in talks | filter: searchTalk">
           <div class="image" style="background-image:url({{talk.image}})">
             <span>{{talk.time}}</span>
             <h2>{{talk.title}}</h2>
             <div class="actions">
-              <button ng-click="play(talk)" type="button" name="button">Play</button>
+              <button ng-click="play(talk)" type="button" name="button">
+                <img src="img/play.png"/> Play Talk
+              </button>
               <p>
                 {{talk.description}}
               </p>

@@ -2,6 +2,7 @@ var app = angular.module('app', []);
 var ipcRenderer = require('electron').ipcRenderer;
 
 app.controller('indexCtrl', function ($scope, $timeout){
+    $scope.loadComplete = false;
 
     $timeout(function(){
         $scope.categories = ipcRenderer.sendSync('getCategories');
@@ -9,6 +10,7 @@ app.controller('indexCtrl', function ($scope, $timeout){
     })
 
     $scope.listCategory = function (category){
+        $scope.loadComplete = false;
         $scope.category = category;
         $scope.listTalks(category);
     }
@@ -16,7 +18,7 @@ app.controller('indexCtrl', function ($scope, $timeout){
     $scope.listTalks = function (category){
       $timeout(function(){
           $scope.talks = ipcRenderer.sendSync('getTalks', category.id);
-          console.log($scope.talks);
+          $scope.loadComplete = true;
       })
     }
 

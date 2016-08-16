@@ -79,38 +79,48 @@ var createWinPlayTalk = function (talk){
       winPlay.show();
       request(urlInfoQ + talk.link, function (error, res, body){
         talk.src = body.split("P.s = '")[1].split("'")[0];
+        talk.urlTalk = urlInfoQ + talk.link;
         winPlay.webContents.send('playEvent', talk);
       });
   });
 }
 
+var getTalkFromBody = function (body, categoryId){
+  var elements = body.split('class="news_type_video');
+  for(item of elements){
+    var talk = {}
+    if(item.split('class="videolength">').length > 1){
+      talk.link = item.split('href="')[1].split('"')[0];
+      talk.title = item.split('title="')[1].split('"')[0];
+      talk.image = item.split('<img src="')[1].split('"')[0];
+      talk.time = item.split('class="videolength">')[1].split('</')[0];
+      talk.author = item.split('class="author"')[1].split('title="')[1].split('"')[0];
+      talk.date = item.split('class="author"')[1].split('&nbsp;em&nbsp;')[1].split('</span>')[0].trim().split('<a')[0];
+      talk.description = item.split('<p>')[1].split('</p>')[0].trim();
+      talks[categoryId].push(talk)
+    }
+  }
+}
+
 ipcMain.on('loadChannels', function (event, arg){
   request(urlInfoQ + '/br/presentations', function (error, res, body){
-    var elements = body.split('class="news_type_video');
-    for(item of elements){
-      var talk = {}
-      if(item.split('class="videolength">').length > 1){
-        talk.link = item.split('href="')[1].split('"')[0];
-        talk.title = item.split('title="')[1].split('"')[0];
-        talk.image = item.split('<img src="')[1].split('"')[0];
-        talk.time = item.split('class="videolength">')[1].split('</')[0];
-        talk.author = item.split('class="author"')[1].split('title="')[1].split('"')[0];
-        talk.date = item.split('class="author"')[1].split('&nbsp;em&nbsp;')[1].split('</span>')[0].trim().split('<a')[0];
-        talk.description = item.split('<p>')[1].split('</p>')[0].trim();
-        talks['all'].push(talk)
-      }
-    }
-
+    getTalkFromBody(body, 'all');
     createWinIndex();
   });
-
 });
 
 ipcMain.on('getCategories', function(event) {
     event.returnValue = categories;
 });
 ipcMain.on('getTalks', function(event, category) {
-    event.returnValue = talks[category];
+    if(talks[category].length){
+        event.returnValue = talks[category];
+    } else {
+      request(urlInfoQ + '/br/' +category+ '/presentations', function (error, res, body){
+        getTalkFromBody(body, category);
+        event.returnValue = talks[category];
+      });
+    }
 });
 ipcMain.on('playTalk', function (event, talk){
     createWinPlayTalk(talk)
