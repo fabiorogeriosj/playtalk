@@ -43,10 +43,6 @@ app.on('ready', function (){
     splash.once('ready-to-show', function (){
         splash.show();
     });
-
-    globalShortcut.register('CommandOrControl+Shift+Space', function() {
-      winPlay.webContents.send('pauseEvent');
-    })
 });
 
 var createWinIndex = function (){
@@ -57,7 +53,7 @@ var createWinIndex = function (){
     autoHideMenuBar: true
   })
   win.loadURL('file://'+__dirname+'/../renderer/index.html');
-  win.webContents.openDevTools();
+  //win.webContents.openDevTools();
   win.once('ready-to-show', function (){
       win.show();
       splash.close();
@@ -74,7 +70,7 @@ var createWinPlayTalk = function (talk){
     backgroundColor:'#000'
   })
   winPlay.loadURL('file://'+__dirname+'/../renderer/play.html');
-  winPlay.webContents.openDevTools();
+
   winPlay.once('ready-to-show', function (){
       winPlay.show();
       request(urlInfoQ + talk.link, function (error, res, body){
@@ -82,6 +78,10 @@ var createWinPlayTalk = function (talk){
         talk.urlTalk = urlInfoQ + talk.link;
         winPlay.webContents.send('playEvent', talk);
       });
+
+      globalShortcut.register('CommandOrControl+Shift+Space', function() {
+        winPlay.webContents.send('pauseEvent');
+      })
   });
 }
 
