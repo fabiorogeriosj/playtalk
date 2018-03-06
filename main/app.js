@@ -35,6 +35,7 @@ app.on('ready', function (){
       resizable: false,
       movable: false,
       frame: false,
+      'node-integration': true,
       transparent:true,
       show: false
     });
